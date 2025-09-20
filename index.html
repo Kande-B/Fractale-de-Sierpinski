@@ -4,461 +4,390 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animation Fractale de Sierpinski - Expérience 3D Interactive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #f0f0f0, #d9e6ff);
             font-family: 'Roboto', sans-serif;
-            text-align: center;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-        h1 {
-            font-size: 2.5em;
-            color: #1a73e8;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
+        .btn-primary {
+            background-color: #1E3A8A;
+            transition: background-color 0.3s ease, transform 0.2s;
         }
-        p {
-            font-size: 1.1em;
-            max-width: 800px;
-            margin: 0 auto 20px;
-        }
-        .container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 900px;
-            width: 100%;
-        }
-        select, button, input {
-            margin: 10px;
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        select {
-            background-color: #e8f0fe;
-            color: #333;
-        }
-        button {
-            background-color: #1a73e8;
-            color: white;
-        }
-        button:hover {
-            background-color: #0d47a1;
+        .btn-primary:hover {
+            background-color: #F97316;
             transform: scale(1.05);
         }
-        input[type="range"] {
-            width: 200px;
+        .section-title {
+            color: #1E3A8A;
         }
-        #iterationCount {
-            font-weight: bold;
-            color: #1a73e8;
-        }
-        details {
-            text-align: left;
-            margin: 20px auto;
-            max-width: 800px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        summary {
-            font-weight: bold;
-            cursor: pointer;
-            color: #1a73e8;
-        }
-        canvas, #threeContainer {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: #FFFFFF;
-            margin: 20px auto;
-            display: block;
-            width: 800px;
-            height: 600px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        footer {
-            margin-top: auto;
-            padding: 10px;
-            font-size: 0.9em;
-            color: #777;
-        }
-        .video-section, .quiz-section {
-            margin-top: 40px;
-            text-align: left;
-            max-width: 800px;
-        }
-        .video-section h2, .quiz-section h2 {
-            color: #1a73e8;
-            text-align: center;
-        }
-        .video-section h3, .quiz-section h3 {
-            color: #333;
-            border-bottom: 2px solid #1a73e8;
-            padding-bottom: 10px;
-        }
-        iframe {
-            display: block;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .quiz-question {
-            margin-bottom: 20px;
-        }
-        .quiz-question label {
-            margin-left: 10px;
-        }
-        .quiz-result {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #e8f0fe;
-        }
-        .correct {
-            background-color: #d4edda;
+        .quiz-result.correct {
+            background-color: #D4EDDA;
             color: #155724;
         }
-        .incorrect {
-            background-color: #f8d7da;
-            color: #721c24;
+        .quiz-result.incorrect {
+            background-color: #F8D7DA;
+            color: #721C24;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Animation Fractale de Sierpinski - Expérience 3D Interactive</h1>
-        <p>Découvrez la beauté des fractales avec cette animation interactive. Pour le tétraèdre, profitez d'une vue 3D rotatable ! Ajustez les paramètres et observez le motif émerger point par point.</p>
-
-        <details>
-            <summary>Explication Complète sur le Processus de Génération des Fractales de Sierpinski</summary>
-            <p>Bonjour ! Je vais vous expliquer de manière complète et accessible le processus derrière cette animation. Je m'adresse à un utilisateur lambda, c'est-à-dire quelqu'un qui n'est pas forcément expert en mathématiques ou en programmation, mais qui est curieux. J'utiliserai un langage simple, avec des analogies du quotidien, et je structurerai l'explication pour qu'elle soit facile à suivre. Si quelque chose reste flou, n'hésitez pas à demander des précisions !</p>
-
-            <h2>1. Qu'est-ce qu'une Fractale ? (Base pour Comprendre)</h2>
-            <p>Une fractale est une forme géométrique qui se répète à l'infini, peu importe l'échelle à laquelle on la regarde. Imaginez un flocon de neige : si vous zoomez sur une petite partie, elle ressemble à l'ensemble. Les fractales sont partout dans la nature (comme les côtes irrégulières, les feuilles de fougère ou les vaisseaux sanguins) et sont créées par des règles mathématiques simples répétées de nombreuses fois.</p>
-            <ul>
-                <li><strong>Pourquoi c'est fascinant ?</strong> Les fractales montrent comment des règles basiques peuvent produire des motifs complexes et infinis. Elles sont utilisées en informatique (pour générer des paysages dans les jeux vidéo), en biologie (modéliser la croissance des arbres) ou même en finance (prévoir les fluctuations boursières).</li>
-                <li><strong>Exemple simple :</strong> Pensez à un arbre : le tronc se divise en branches, qui se divisent en plus petites branches, et ainsi de suite. C'est fractal !</li>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <nav class="container mx-auto px-4 py-4">
+            <h1 class="text-3xl font-bold text-blue-900">Animation Fractale de Sierpinski</h1>
+            <ul class="flex space-x-4 mt-2">
+                <li><a href="#home" class="text-blue-600 hover:text-orange-500">Accueil</a></li>
+                <li><a href="#explanation" class="text-blue-600 hover:text-orange-500">Explication</a></li>
+                <li><a href="#interactive" class="text-blue-600 hover:text-orange-500">Animation Interactive</a></li>
+                <li><a href="#videos" class="text-blue-600 hover:text-orange-500">Vidéos</a></li>
+                <li><a href="#quiz" class="text-blue-600 hover:text-orange-500">Quiz</a></li>
             </ul>
+        </nav>
+    </header>
 
-            <h2>2. Qu'est-ce que le Triangle de Sierpinski ?</h2>
-            <p>Le triangle de Sierpinski est une fractale célèbre, inventée par le mathématicien polonais Wacław Sierpiński en 1915. C'est un triangle équilatéral (tous les côtés égaux) d'où on enlève des triangles plus petits au centre, encore et encore.</p>
-            <ul>
-                <li><strong>Construction classique (récursive) :</strong>
-                    <ol>
-                        <li>Commencez avec un grand triangle.</li>
-                        <li>Reliez les milieux des côtés pour former 4 petits triangles (3 aux coins et 1 au centre).</li>
-                        <li>Enlevez le triangle du centre.</li>
-                        <li>Répétez pour chaque petit triangle restant : enlevez leur centre, et ainsi de suite à l'infini.</li>
-                    </ol>
-                    Résultat : Une figure qui ressemble à un triangle "troué" partout, avec une infinité de détails. Elle a une "dimension fractale" de environ 1,58 (pas entière, ce qui la rend spéciale – elle n'est ni une ligne (dim. 1) ni une surface pleine (dim. 2)).
-                </li>
-                <li><strong>Variantes dans le site :</strong>
-                    <ul>
-                        <li><strong>Tapis de Sierpinski :</strong> Pareil, mais sur un carré. On divise le carré en 9 petits carrés (comme un morpion) et on enlève le centre. Répétez pour les 8 restants. Résultat : Un "tapis" troué.</li>
-                        <li><strong>Tétraèdre de Sierpinski :</strong> En 3D ! Un tétraèdre (pyramide à 4 faces triangulaires) d'où on enlève des petits tétraèdres au centre. Sur le site, on le visualise en 3D interactive avec rotation.</li>
-                    </ul>
-                </li>
-            </ul>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        <!-- Introduction -->
+        <section id="home" class="mb-8">
+            <h2 class="text-3xl font-semibold section-title mb-4">Découvrez les Fractales de Sierpinski</h2>
+            <p class="text-lg">Découvrez la beauté des fractales avec cette animation interactive. Pour le tétraèdre, profitez d'une vue 3D rotatable ! Ajustez les paramètres et observez le motif émerger point par point.</p>
+        </section>
 
-            <h2>3. Le Processus Utilisé : Le Jeu du Chaos (Méthode de Génération des Points)</h2>
-            <p>Au lieu de la méthode récursive (qui dessine des lignes), le site utilise le <strong>jeu du chaos</strong>, une façon aléatoire et amusante de générer la fractale. C'est comme un jeu de hasard qui révèle un motif ordonné au fil du temps. Voici l'explication étape par étape, simple comme un jeu de société :</p>
-            <ol>
-                <li><strong>Préparation (Initialisation) :</strong>
-                    <ul>
-                        <li>Définissez les "sommets" (points fixes) de la figure :</li>
-                        <ul>
-                            <li>Triangle : 3 sommets (les coins d'un triangle équilatéral).</li>
-                            <li>Tapis : 8 sommets (coins et milieux d'un carré, évitant le centre).</li>
-                            <li>Tétraèdre : 4 sommets en 3D.</li>
-                        </ul>
-                        <li>Choisissez un point de départ aléatoire (souvent au centre) à l'intérieur de la figure. Ce point est comme votre "pion" de départ.</li>
-                    </ul>
-                </li>
-                <li><strong>La Règle du Jeu (Itération) :</strong>
-                    <ul>
-                        <li>À chaque tour :</li>
-                        <ul>
-                            <li>Tirez au sort un sommet parmi ceux définis (aléatoire, comme lancer un dé).</li>
-                            <li>Déplacez votre pion actuel à <strong>mi-chemin</strong> entre sa position actuelle et le sommet choisi. (Ex. : Si le pion est à 10 cm d'un sommet, déplacez-le à 5 cm.)</li>
-                            <li>Dessinez un petit point à cette nouvelle position.</li>
-                            <li>Le nouveau point devient votre pion actuel.</li>
-                        </ul>
-                        <li>Répétez cela des milliers de fois (jusqu'à 50 000 sur le site pour une belle résolution).</li>
-                    </ul>
-                </li>
-                <li><strong>Animation et Visualisation sur le Site :</strong>
-                    <ul>
-                        <li>L'animation ajoute les points progressivement (1 par 0,5 seconde par défaut, pour que vous voyiez le processus).</li>
-                        <li>Pour le tétraèdre, utilisez la souris pour rotator la vue 3D !</li>
-                        <li>Une <strong>ligne verte temporaire</strong> relie le point précédent au sommet choisi (en 2D seulement).</li>
-                        <li>Le dernier point ajouté est <strong>plus gros</strong> pour le repérer facilement.</li>
-                        <li>Vous pouvez pauser, reprendre, ou avancer pas à pas pour observer.</li>
-                    </ul>
-                </li>
-            </ol>
-            <p><strong>Pourquoi c'est aléatoire mais ordonné ?</strong> L'aléatoire (choix du sommet) simule le chaos, mais la règle du "mi-chemin" force les points à se rapprocher des zones "autorisées" de la fractale. Les points évitent naturellement les zones "interdites" (comme le centre du triangle), car aucun sommet n'y mène.</p>
+        <!-- Explanation -->
+        <section id="explanation" class="mb-8">
+            <details class="bg-white rounded-lg shadow p-6">
+                <summary class="text-lg font-bold text-blue-900 cursor-pointer">Explication Complète sur le Processus de Génération des Fractales de Sierpinski</summary>
+                <p class="mt-4">Bonjour ! Je vais vous expliquer de manière complète et accessible le processus derrière cette animation. Je m'adresse à un utilisateur lambda, c'est-à-dire quelqu'un qui n'est pas forcément expert en mathématiques ou en programmation, mais qui est curieux. J'utiliserai un langage simple, avec des analogies du quotidien, et je structurerai l'explication pour qu'elle soit facile à suivre. Si quelque chose reste flou, n'hésitez pas à demander des précisions !</p>
 
-            <h2>4. Pourquoi Observe-t-on ce Résultat ? (Explication Scientifique Simplifiée)</h2>
-            <ul>
-                <li><strong>L'Attracteur Étrange :</strong> La fractale de Sierpinski est un "attracteur" mathématique. Peu importe où vous commencez (tant que c'est à l'intérieur), les points sont "attirés" vers la structure fractale. C'est comme un aimant qui organise le chaos : après quelques itérations, les points se collent aux bords du motif.</li>
-                <li><strong>Auto-Similarité :</strong> Chaque partie de la fractale ressemble à l'ensemble. C'est pourquoi, en zoomant, on voit des mini-triangles identiques. Le jeu du chaos révèle cela parce que la règle du mi-chemin reproduit cette similarité à plus petite échelle.</li>
-                <li><strong>Pourquoi ça Marche ? (Mathématiquement)</strong>
-                    <p>La règle du mi-chemin est une contraction (réduction de distance). En théorie des systèmes dynamiques, cela converge vers un ensemble invariant (la fractale).</p>
-                    <p>Analogie : Imaginez rouler une balle sur une table avec des bosses : elle finit par se stabiliser dans les creux (l'attracteur). Ici, les "creux" sont les lignes de la fractale.</p>
-                </li>
-                <li><strong>Résultat Observé :</strong>
-                    <ul>
-                        <li>Au début : Points aléatoires, pas de motif visible.</li>
-                        <li>Après 100-500 points : On voit les contours émerger.</li>
-                        <li>Après 10 000+ points : La fractale complète apparaît, avec des trous infinis (mais limitée par la résolution de l'écran).</li>
-                        <li>Pour le tétraèdre : En 3D, on voit un effet de profondeur avec rotation interactive.</li>
-                    </ul>
-                </li>
-                <li><strong>Limites et Curiosités :</strong>
-                    <ul>
-                        <li><strong>Infini en Pratique :</strong> On ne peut pas calculer l'infini sur un ordinateur, donc on s'arrête à 50 000 points. Plus de points = plus détaillé, mais plus lent.</li>
-                        <li><strong>Historique :</strong> Sierpiński l'a décrit en 1915, mais le jeu du chaos a été popularisé par Michael Barnsley dans les années 1980 pour générer des fractales sur ordinateur.</li>
-                        <li><strong>Applications Réelles :</strong> En compression d'images (fractales compactes), modélisation de terrains, ou même en antennes (formes fractales pour capter plus de fréquences).</li>
-                        <li><strong>Fun Fact :</strong> Le triangle de Sierpinski peut être généré avec d'autres méthodes, comme des automates cellulaires (comme le Jeu de la Vie de Conway), mais le jeu du chaos est le plus simple pour l'animation.</li>
-                    </ul>
-                </li>
-            </ul>
-
-            <h2>5. Conseils pour un Utilisateur Lambda du Site</h2>
-            <ul>
-                <li><strong>Interface Intuitive :</strong> 
-                    <ul>
-                        <li>Choisissez le type de fractale via le menu déroulant.</li>
-                        <li>Ajustez la vitesse avec le curseur (1 = très lent, idéal pour apprendre ; 50 = plus rapide pour voir le résultat final).</li>
-                        <li>Boutons : "Démarrer" pour lancer, "Pause/Reprendre" pour arrêter/continuer, "Étape Suivante" pour ajouter un point manuellement, "Réinitialiser" pour recommencer.</li>
-                    </ul>
-                </li>
-                <li><strong>Astuces :</strong>
-                    <ul>
-                        <li>Sur mobile : Ouvrez dans un navigateur (Chrome/Safari) ; ça marche, mais l'écran est plus petit. Pour le 3D, utilisez la touche pour rotator.</li>
-                        <li>Personnalisation : Si vous savez coder, modifiez le code (ex. : changez les couleurs ou ajoutez plus de points).</li>
-                        <li>Problèmes courants : Si l'animation est trop lente sur un vieux ordinateur, augmentez la vitesse ou réduisez maxIterations dans le code.</li>
-                    </ul>
-                </li>
-                <li><strong>Pour Aller Plus Loin :</strong>
-                    <ul>
-                        <li>Essayez d'autres fractales (recherchez "flocon de Koch" ou "ensemble de Mandelbrot" en ligne).</li>
-                        <li>Logiciels : Fractal Explorer (app gratuite) ou sites comme Mandelbrot Set sur GeoGebra.</li>
-                        <li>Lecture : Livre "Chaos and Fractals" de Heinz-Otto Peitgen (accessible pour débutants).</li>
-                    </ul>
-                </li>
-            </ul>
-        </details>
-        
-        <label for="fractalType">Type de fractale :</label>
-        <select id="fractalType">
-            <option value="triangle">Triangle de Sierpinski (2D)</option>
-            <option value="carpet">Tapis de Sierpinski (2D)</option>
-            <option value="tetrahedron">Tétraèdre de Sierpinski (3D Interactive)</option>
-        </select>
-        
-        <label for="speed">Vitesse (points par frame) :</label>
-        <input type="range" id="speed" min="1" max="50" value="1">
-        <span id="speedValue">1</span>
-        
-        <br>
-        <button id="startBtn">Démarrer l'Animation</button>
-        <button id="pauseBtn">Pause</button>
-        <button id="stepBtn">Étape Suivante</button>
-        <button id="resetBtn">Réinitialiser</button>
-        
-        <p>Itérations : <span id="iterationCount">0</span></p>
-        
-        <canvas id="canvas" width="800" height="600" style="display: none;"></canvas>
-        <div id="threeContainer" style="display: none; width: 800px; height: 600px;"></div>
-    </div>
-
-    <div class="video-section container">
-        <h2>Vidéos Éducatives sur les Fractales de Sierpinski</h2>
-        <p>Pour enrichir votre expérience, voici une sélection organisée de vidéos YouTube couvrant l'histoire, les méthodes de construction, le jeu du chaos, la dimension fractale et des propriétés étranges. Chaque section est dédiée à un aspect spécifique pour un apprentissage progressif et plaisant. Chaque vidéo est suivie d'un récapitulatif détaillé basé sur son contenu, pour vous permettre de saisir les idées principales sans obligatoirement la visionner en entier.</p>
-
-        <h3>1. Histoire et Découverte du Triangle de Sierpinski</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/-Bz2onW2YHQ" title="Histoire du Triangle de Sierpinski" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <details>
-            <summary>Récapitulatif Détaillé</summary>
-            <p>Le vidéo, intitulé "The Sierpinski Triangle," est le premier épisode de Math Proof Monday par The Newton Frontier. Il se concentre sur le triangle de Sierpinski, un fractal nommé d'après le mathématicien polonais Waclaw Sierpinski, et fournit des preuves pour son aire et son périmètre.</p>
-            <h4>Histoire et Explication du Triangle de Sierpinski :</h4>
-            <ul>
-                <li>Le triangle de Sierpinski est décrit comme un fractal, une figure géométrique où des motifs similaires se répètent à des échelles de plus en plus petites.</li>
-                <li>Il est construit à partir d'un triangle équilatéral en le subdivisant de manière répétée en quatre triangles équilatéraux congruents plus petits et en supprimant le triangle central, ce processus étant répété un nombre infini de fois.</li>
-            </ul>
-            <h4>Preuves et Analyse Mathématique :</h4>
-            <ul>
-                <li><strong>Preuve de l'Aire :</strong></li>
-                <ul>
-                    <li>L'aire d'un triangle équilatéral est donnée par la formule (racine carrée de 3)/4 fois la longueur du côté au carré.</li>
-                    <li>Pour le triangle de Sierpinski, l'aire à chaque étape (n) est calculée, commençant par n=0 (triangle original) et progressant vers des étapes supérieures.</li>
-                    <li>Exemples : à n=0, aire = (racine carrée de 3)/4 ; à n=1, aire = (racine carrée de 3)/4 fois 3/4 ; à n=2, aire = (racine carrée de 3)/4 fois 9/16 ; à n=3, aire = (racine carrée de 3)/4 fois 27/64.</li>
-                    <li>Un motif est identifié où l'aire à l'étape n égale (racine carrée de 3)/4 fois (3/4)^n.</li>
-                    <li>En prenant la limite lorsque n approche l'infini, l'aire de la région non ombrée approche 0, car (3/4)^infini (où 3/4 < 1) résulte en 0.</li>
+                <h2 class="text-2xl font-semibold section-title mt-6">1. Qu'est-ce qu'une Fractale ? (Base pour Comprendre)</h2>
+                <p>Une fractale est une forme géométrique qui se répète à l'infini, peu importe l'échelle à laquelle on la regarde. Imaginez un flocon de neige : si vous zoomez sur une petite partie, elle ressemble à l'ensemble. Les fractales sont partout dans la nature (comme les côtes irrégulières, les feuilles de fougère ou les vaisseaux sanguins) et sont créées par des règles mathématiques simples répétées de nombreuses fois.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Pourquoi c'est fascinant ?</strong> Les fractales montrent comment des règles basiques peuvent produire des motifs complexes et infinis. Elles sont utilisées en informatique (pour générer des paysages dans les jeux vidéo), en biologie (modéliser la croissance des arbres) ou même en finance (prévoir les fluctuations boursières).</li>
+                    <li><strong>Exemple simple :</strong> Pensez à un arbre : le tronc se divise en branches, qui se divisent en plus petites branches, et ainsi de suite. C'est fractal !</li>
                 </ul>
-                <li><strong>Preuve du Périmètre :</strong></li>
-                <ul>
-                    <li>Le périmètre à n=0 est 3 (pour un triangle de longueur de côté 1).</li>
-                    <li>À chaque étape subséquente, la longueur du côté est divisée par deux, et le nombre de côtés augmente.</li>
-                    <li>Pour n=1, chaque petit triangle a des côtés de longueur 1/2, et avec trois triangles, le périmètre est 9/2.</li>
-                    <li>Le périmètre suit un motif où à l'étape n, il égale 3 fois (3/2)^n.</li>
-                    <li>En prenant la limite lorsque n approche l'infini, le périmètre approche l'infini, car (3/2)^infini (où 3/2 > 1) croît sans borne.</li>
-                    <li>Cela résulte en une figure géométriquement intéressante avec une aire nulle mais un périmètre infini.</li>
+
+                <h2 class="text-2xl font-semibold section-title mt-6">2. Qu'est-ce que le Triangle de Sierpinski ?</h2>
+                <p>Le triangle de Sierpinski est une fractale célèbre, inventée par le mathématicien polonais Wacław Sierpiński en 1915. C'est un triangle équilatéral (tous les côtés égaux) d'où on enlève des triangles plus petits au centre, encore et encore.</p>
+                <ul class="list-disc pl-6">
+                    <li><strong>Construction classique (récursive) :</strong>
+                        <ol class="list-decimal pl-6">
+                            <li>Commencez avec un grand triangle.</li>
+                            <li>Reliez les milieux des côtés pour former 4 petits triangles (3 aux coins et 1 au centre).</li>
+                            <li>Enlevez le triangle du centre.</li>
+                            <li>Répétez pour chaque petit triangle restant : enlevez leur centre, et ainsi de suite à l'infini.</li>
+                        </ol>
+                        Résultat : Une figure qui ressemble à un triangle "troué" partout, avec une infinité de détails. Elle a une "dimension fractale" de environ 1,58 (pas entière, ce qui la rend spéciale – elle n'est ni une ligne (dim. 1) ni une surface pleine (dim. 2)).
+                    </li>
+                    <li><strong>Variantes dans le site :</strong>
+                        <ul class="list-disc pl-6">
+                            <li><strong>Tapis de Sierpinski :</strong> Pareil, mais sur un carré. On divise le carré en 9 petits carrés (comme un morpion) et on enlève le centre. Répétez pour les 8 restants. Résultat : Un "tapis" troué.</li>
+                            <li><strong>Tétraèdre de Sierpinski :</strong> En 3D ! Un tétraèdre (pyramide à 4 faces triangulaires) d'où on enlève des petits tétraèdres au centre. Sur le site, on le visualise en 3D interactive avec rotation.</li>
+                        </ul>
+                    </li>
                 </ul>
-            </ul>
-            <p>Le vidéo se termine par un appel à aimer et s'abonner à la chaîne pour le soutien.</p>
-        </details>
 
-        <h3>2. Méthodes de Construction du Triangle de Sierpinski</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/IZHiBJGcrqI" title="Méthodes de Construction" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <details>
-            <summary>Récapitulatif Détaillé</summary>
-            <p>Le vidéo présente six constructions mathématiques pour créer le triangle de Sierpiński, un fractal célèbre, avec des explications détaillées basées sur la description et les extraits de transcription. Les idées principales pour chaque construction sont les suivantes :</p>
-            <ol>
-                <li><strong>Suppression de Triangles :</strong> Commencez avec un triangle équilatéral, divisez-le en quatre triangles équilatéraux congruents, supprimez le milieu, et répétez le processus sur les triangles restants. Ce processus itératif continue indéfiniment, créant une figure auto-similaire où zoomer en révèle la même forme, approximant le triangle de Sierpiński.</li>
-                <li><strong>Le Jeu du Chaos :</strong> Commencez avec un triangle équilatéral et un point au milieu. Sélectionnez aléatoirement l'un des trois sommets, tracez une ligne vers lui, et tracez le point milieu. Répétez ce processus, en partant du nouveau point à chaque fois, et après de nombreuses itérations (par exemple, 30 000 fois), le tracé résultant forme le triangle de Sierpiński, démontrant l'ordre à partir d'actions apparemment aléatoires.</li>
-                <li><strong>Triangle de Pascal Modulo 2 (Halayudha) :</strong> Construisez le triangle de Pascal en commençant par un "1" au sommet, et chaque entrée est la somme des deux entrées au-dessus, avec les rangées commençant et se terminant par "1". Ombrez les cellules si l'entrée est impaire et laissez non ombrées si paire. En étendant cela à la rangée 256 et en ombrant seulement les entrées impaires révèle le triangle de Sierpiński, avec le motif expliqué par le processus.</li>
-                <li><strong>Arbre Branchant Ternaire :</strong> Commencez avec une ligne de longueur unitaire et appliquez trois transformations, chacune mettant à l'échelle par 0.5 et tournant par un multiple de 2π/3. Répétez ces transformations sur les branches itérativement, et après avoir supprimé les branches, l'ensemble résultant des feuilles forme le triangle de Sierpiński.</li>
-                <li><strong>Ordre de Dominance Bitwise :</strong> Introduisez un ordre partiel où un nombre est inférieur ou égal à un autre si chaque bit de 1 dans le premier est également 1 dans le second. En arrangeant les nombres de 0 à 2^n - 1 dans un triangle et en ombrant les cellules où un nombre domine un autre révèle le triangle de Sierpiński. Cela relie les représentations binaires et les fractales.</li>
-                <li><strong>Construction de la Flèche :</strong> Commencez avec un triangle pointant vers le bas, remplacez chaque côté par une flèche (deux segments formant un V), et répétez. Après plusieurs itérations, la courbe résultante, lorsqu'ombrée, forme le triangle de Sierpiński. Cela démontre une autre méthode itérative pour générer le fractal.</li>
-            </ol>
-            <p>Le vidéo met l'accent sur la polyvalence du triangle de Sierpiński, apparaissant dans divers contextes mathématiques, et encourage l'exploration supplémentaire via des ressources liées.</p>
-        </details>
+                <h2 class="text-2xl font-semibold section-title mt-6">3. Le Processus Utilisé : Le Jeu du Chaos (Méthode de Génération des Points)</h2>
+                <p>Au lieu de la méthode récursive (qui dessine des lignes), le site utilise le <strong>jeu du chaos</strong>, une façon aléatoire et amusante de générer la fractale. C'est comme un jeu de hasard qui révèle un motif ordonné au fil du temps. Voici l'explication étape par étape, simple comme un jeu de société :</p>
+                <ol class="list-decimal pl-6">
+                    <li><strong>Préparation (Initialisation) :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>Définissez les "sommets" (points fixes) de la figure :</li>
+                            <ul class="list-disc pl-6">
+                                <li>Triangle : 3 sommets (les coins d'un triangle équilatéral).</li>
+                                <li>Tapis : 8 sommets (coins et milieux d'un carré, évitant le centre).</li>
+                                <li>Tétraèdre : 4 sommets en 3D.</li>
+                            </ul>
+                            <li>Choisissez un point de départ aléatoire (souvent au centre) à l'intérieur de la figure. Ce point est comme votre "pion" de départ.</li>
+                        </ul>
+                    </li>
+                    <li><strong>La Règle du Jeu (Itération) :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>À chaque tour :</li>
+                            <ul class="list-disc pl-6">
+                                <li>Tirez au sort un sommet parmi ceux définis (aléatoire, comme lancer un dé).</li>
+                                <li>Déplacez votre pion actuel à <strong>mi-chemin</strong> entre sa position actuelle et le sommet choisi. (Ex. : Si le pion est à 10 cm d'un sommet, déplacez-le à 5 cm.)</li>
+                                <li>Dessinez un petit point à cette nouvelle position.</li>
+                                <li>Le nouveau point devient votre pion actuel.</li>
+                            </ul>
+                            <li>Répétez cela des milliers de fois (jusqu'à 50 000 sur le site pour une belle résolution).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Animation et Visualisation sur le Site :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>L'animation ajoute les points progressivement (1 par 0,5 seconde par défaut, pour que vous voyiez le processus).</li>
+                            <li>Pour le tétraèdre, utilisez la souris pour rotator la vue 3D !</li>
+                            <li>Une <strong>ligne verte temporaire</strong> relie le point précédent au sommet choisi (en 2D seulement).</li>
+                            <li>Le dernier point ajouté est <strong>plus gros</strong> pour le repérer facilement.</li>
+                            <li>Vous pouvez pauser, reprendre, ou avancer pas à pas pour observer.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><strong>Pourquoi c'est aléatoire mais ordonné ?</strong> L'aléatoire (choix du sommet) simule le chaos, mais la règle du "mi-chemin" force les points à se rapprocher des zones "autorisées" de la fractale. Les points évitent naturellement les zones "interdites" (comme le centre du triangle), car aucun sommet n'y mène.</p>
 
-        <h3>3. Le Jeu du Chaos et la Génération du Triangle</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/DM5uaMlHpQw" title="Jeu du Chaos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <details>
-            <summary>Récapitulatif Détaillé</summary>
-            <p>Le vidéo se concentre sur la simulation du jeu du chaos pour générer le triangle de Sierpinski, un fractal avec une forme triangulaire contenant des triangles inversés plus petits répétés infiniment. Le processus commence par expliquer le triangle de Sierpinski et sa connexion au triangle de Pascal, où marquer les nombres pairs révèle un motif ressemblant à l'étoile de Sierpinski.</p>
-            <p>Le jeu du chaos est introduit comme une méthode pour créer le triangle de Sierpinski : commencez avec trois points aux sommets d'un triangle (ABC), choisissez un point aléatoire à l'intérieur, et dessinez de manière répétée un nouveau point à mi-chemin entre le point actuel et un sommet choisi aléatoirement. Ce processus, techniquement appelé "attracteur," résulte en des points formant le triangle de Sierpinski, connu comme un "attracteur étrange."</p>
-            <p>Le vidéo fournit une intuition pour le jeu du chaos : si un point commence sur le triangle de Sierpinski, le point suivant reste sur lui, situé sur un triangle similaire plus petit près d'un coin. Si commençant à l'intérieur de l'espace blanc (les lacunes dans le triangle), le nouveau point se rapproche du triangle de Sierpinski, et le processus continue à remplir le motif fractal. Commencer en dehors du triangle suit un principe similaire, convergeant éventuellement vers le triangle de Sierpinski.</p>
-            <p>Une simulation interactive est disponible à https://nishkaarora.github.io/sierpinski/, permettant aux utilisateurs de choisir les coordonnées du triangle et la position de départ pour le jeu du chaos. Le vidéo encourage les spectateurs à essayer de coder la simulation eux-mêmes et conclut en soulignant la fascination des mathématiques.</p>
-        </details>
+                <h2 class="text-2xl font-semibold section-title mt-6">4. Pourquoi Observe-t-on ce Résultat ? (Explication Scientifique Simplifiée)</h2>
+                <ul class="list-disc pl-6">
+                    <li><strong>L'Attracteur Étrange :</strong> La fractale de Sierpinski est un "attracteur" mathématique. Peu importe où vous commencez (tant que c'est à l'intérieur), les points sont "attirés" vers la structure fractale. C'est comme un aimant qui organise le chaos : après quelques itérations, les points se collent aux bords du motif.</li>
+                    <li><strong>Auto-Similarité :</strong> Chaque partie de la fractale ressemble à l'ensemble. C'est pourquoi, en zoomant, on voit des mini-triangles identiques. Le jeu du chaos révèle cela parce que la règle du mi-chemin reproduit cette similarité à plus petite échelle.</li>
+                    <li><strong>Pourquoi ça Marche ? (Mathématiquement)</strong>
+                        <p>La règle du mi-chemin est une contraction (réduction de distance). En théorie des systèmes dynamiques, cela converge vers un ensemble invariant (la fractale).</p>
+                        <p>Analogie : Imaginez rouler une balle sur une table avec des bosses : elle finit par se stabiliser dans les creux (l'attracteur). Ici, les "creux" sont les lignes de la fractale.</p>
+                    </li>
+                    <li><strong>Résultat Observé :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>Au début : Points aléatoires, pas de motif visible.</li>
+                            <li>Après 100-500 points : On voit les contours émerger.</li>
+                            <li>Après 10 000+ points : La fractale complète apparaît, avec des trous infinis (mais limitée par la résolution de l'écran).</li>
+                            <li>Pour le tétraèdre : En 3D, on voit un effet de profondeur avec rotation interactive.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Limites et Curiosités :</strong>
+                        <ul class="list-disc pl-6">
+                            <li><strong>Infini en Pratique :</strong> On ne peut pas calculer l'infini sur un ordinateur, donc on s'arrête à 50 000 points. Plus de points = plus détaillé, mais plus lent.</li>
+                            <li><strong>Historique :</strong> Sierpiński l'a décrit en 1915, mais le jeu du chaos a été popularisé par Michael Barnsley dans les années 1980 pour générer des fractales sur ordinateur.</li>
+                            <li><strong>Applications Réelles :</strong> En compression d'images (fractales compactes), modélisation de terrains, ou même en antennes (formes fractales pour capter plus de fréquences).</li>
+                            <li><strong>Fun Fact :</strong> Le triangle de Sierpinski peut être généré avec d'autres méthodes, comme des automates cellulaires (comme le Jeu de la Vie de Conway), mais le jeu du chaos est le plus simple pour l'animation.</li>
+                        </ul>
+                    </li>
+                </ul>
 
-        <h3>4. Dimension Fractale et Applications</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/aCxnVrHS7dc" title="Dimension Fractale" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <details>
-            <summary>Récapitulatif Détaillé</summary>
-            <p>Le vidéo se concentre sur le triangle de Sierpinski, un fractal avec une aire égale à zéro et une dimension fractionnaire approximativement 1.585, qui se situe entre les dimensions d'une ligne (1) et d'un carré (2). Le processus de formation commence avec un triangle équilatéral, où les points médians de chaque côté sont trouvés et connectés pour former quatre triangles équilatéraux plus petits congruents. Le triangle du milieu est supprimé, laissant trois triangles identiques plus petits. Ce processus est répété infiniment, avec chaque étape impliquant de trouver les points médians, de les connecter, et de supprimer le triangle du milieu.</p>
-            <p>La dimension fractale est calculée en utilisant une équation dérivée d'une vidéo précédente (https://www.youtube.com/watch?v=wgZYKFKZSeU), reliant le facteur d'échelle et le nombre de pièces. Pour le triangle de Sierpinski, chaque étape met à l'échelle les longueurs des côtés par 1/2, et trois nouveaux triangles sont formés, menant à l'équation 2^D = 3, où D est la dimension. Cela est résolu en la réécrivant comme un logarithme, log base 2 de 3, qui est évalué en utilisant la règle de changement de base (log 3 / log 2 ou ln 3 / ln 2), résultant en un nombre irrationnel approximativement 1.5849.</p>
-            <h4>Récapitulatif des Idées Principales :</h4>
-            <ul>
-                <li><strong>Formation du Triangle de Sierpinski :</strong> Le processus commence avec un triangle équilatéral. Les points médians de chaque côté sont connectés pour former quatre triangles équilatéraux plus petits, et le milieu est supprimé, laissant trois triangles identiques. Cela est répété infiniment, créant un motif auto-similaire.</li>
-                <li><strong>Dimension Fractale :</strong> La dimension est fractionnaire, approximativement 1.585, et est calculée en utilisant l'équation 2^D = 3, dérivée du facteur d'échelle (1/2) et du nombre de pièces (3) après chaque itération. Cette équation est résolue en prenant le logarithme base 2 de 3, évalué comme log 3 / log 2 ou ln 3 / ln 2, produisant un nombre irrationnel.</li>
-                <li><strong>Applications et Contexte :</strong> Le vidéo mentionne les propriétés du triangle de Sierpinski, telles que l'aire zéro et la dimension fractionnaire, mais les applications spécifiques ne sont pas détaillées dans le contenu fourni. L'accent est mis sur le processus mathématique de formation et de calcul de dimension.</li>
-            </ul>
-        </details>
-
-        <h3>5. Propriétés Étranges et Connexions Mathématiques</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/Cboz9IFvuJQ" title="Propriétés Étranges" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <details>
-            <summary>Récapitulatif Détaillé</summary>
-            <p>Le vidéo discute du triangle de Sierpiński, en se concentrant sur sa nature fractale et une propriété étrange liée aux nombres premiers de Fermat et aux polygones constructibles. Les points clés incluent :</p>
-            <ul>
-                <li>Le triangle de Sierpiński est un fractal qui peut être dessiné en commençant par un triangle équilatéral et en trouvant de manière répétée les points médians des bords pour former des triangles plus petits, créant un motif auto-similaire. Alternativement, il peut être construit en commençant par un petit triangle et en le copiant dans des positions spécifiques, en travaillant vers l'extérieur.</li>
-                <li>Le triangle apparaît dans divers contextes mathématiques, tels que la théorie du chaos (référencé dans la vidéo de Ben Sparks, https://youtu.be/kbKtFN71Lfs) et la Tour de Hanoï (référencé dans la vidéo d'Ayliean, https://youtu.be/PGuRmqpr6Oo).</li>
-                <li>Le vidéo explore les polygones constructibles, qui sont créés en utilisant seulement une boussole et une règle droite (sans marques). Les triangles équilatéraux (3 côtés) et les polygones réguliers avec des côtés qui sont des puissances de deux (par exemple, 4, 8, 16) sont facilement constructibles. Les polygones à côtés impairs constructibles incluent 3, 5, 15, 17, 51, 85, et d'autres, suivant des règles spécifiques.</li>
-                <li>Une condition pour qu'un polygone à côtés impairs soit constructible est que le nombre de côtés \(n\) doit être un produit d'une puissance de deux et de n'importe quel nombre de nombres premiers de Fermat distincts. Les nombres premiers de Fermat sont des nombres de la forme \(2^{2^n} + 1\), et seulement cinq sont connus : 3, 5, 17, 257, et 65537. Cela limite le nombre de polygones constructibles impairs à 31, car les combinaisons sont contraintes par l'ensemble fini des nombres premiers de Fermat.</li>
-                <li>La propriété étrange mise en évidence est que convertir les nombres de polygones constructibles impairs en binaire et les arranger dans un motif triangulaire révèle le triangle de Sierpiński. Ce motif tient jusqu'à la rangée 32, mais se décompose après la rangée 33 en raison du prochain nombre de Fermat (non premier, par exemple, 641 × 6700417), car il n'y a peut-être plus de nombres premiers de Fermat au-delà des cinq connus.</li>
-            </ul>
-            <h4>Récapitulatif des Idées Principales :</h4>
-            <p>Le vidéo commence par introduire le triangle de Sierpiński et explore une connexion inattendue entre les nombres de côtés des polygones constructibles impairs et le motif du triangle de Sierpiński en binaire. Il discute des limitations imposées par les nombres premiers de Fermat et comment cela mène à une apparition finie du motif fractal dans ce contexte.</p>
-        </details>
-    </div>
-
-    <div class="quiz-section container">
-        <h2>Quiz sur les Fractales de Sierpinski</h2>
-        <p>Testez vos connaissances sur les fractales de Sierpinski avec ce quiz interactif ! Répondez aux questions ci-dessous, et si vous vous trompez, une explication détaillée vous aidera à comprendre. Amusez-vous et apprenez en même temps !</p>
-        
-        <div class="quiz-question">
-            <h3>1. Qui a inventé le triangle de Sierpinski ?</h3>
-            <label><input type="radio" name="q1" value="a"> Benoit Mandelbrot</label><br>
-            <label><input type="radio" name="q1" value="b"> Wacław Sierpiński</label><br>
-            <label><input type="radio" name="q1" value="c"> John Conway</label><br>
-            <label><input type="radio" name="q1" value="d"> Michael Barnsley</label><br>
-            <button onclick="checkAnswer('q1', 'b')">Vérifier la Réponse</button>
-            <div id="result-q1" class="quiz-result"></div>
-            <details id="correction-q1" style="display: none;">
-                <summary>Correction</summary>
-                <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Wacław Sierpiński</strong>. Le triangle de Sierpinski a été inventé par le mathématicien polonais Wacław Sierpiński en 1915. Benoit Mandelbrot est connu pour l'ensemble de Mandelbrot, John Conway pour le Jeu de la Vie, et Michael Barnsley pour ses travaux sur les fractales et le jeu du chaos. Consultez la vidéo "Histoire et Découverte" pour plus de détails !</p>
+                <h2 class="text-2xl font-semibold section-title mt-6">5. Conseils pour un Utilisateur Lambda du Site</h2>
+                <ul class="list-disc pl-6">
+                    <li><strong>Interface Intuitive :</strong> 
+                        <ul class="list-disc pl-6">
+                            <li>Choisissez le type de fractale via le menu déroulant.</li>
+                            <li>Ajustez la vitesse avec le curseur (1 = très lent, idéal pour apprendre ; 50 = plus rapide pour voir le résultat final).</li>
+                            <li>Boutons : "Démarrer" pour lancer, "Pause/Reprendre" pour arrêter/continuer, "Étape Suivante" pour ajouter un point manuellement, "Réinitialiser" pour recommencer.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Astuces :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>Sur mobile : Ouvrez dans un navigateur (Chrome/Safari) ; ça marche, mais l'écran est plus petit. Pour le 3D, utilisez la touche pour rotator.</li>
+                            <li>Personnalisation : Si vous savez coder, modifiez le code (ex. : changez les couleurs ou ajoutez plus de points).</li>
+                            <li>Problèmes courants : Si l'animation est trop lente sur un vieux ordinateur, augmentez la vitesse ou réduisez maxIterations dans le code.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pour Aller Plus Loin :</strong>
+                        <ul class="list-disc pl-6">
+                            <li>Essayez d'autres fractales (recherchez "flocon de Koch" ou "ensemble de Mandelbrot" en ligne).</li>
+                            <li>Logiciels : Fractal Explorer (app gratuite) ou sites comme Mandelbrot Set sur GeoGebra.</li>
+                            <li>Lecture : Livre "Chaos and Fractals" de Heinz-Otto Peitgen (accessible pour débutants).</li>
+                        </ul>
+                    </li>
+                </ul>
             </details>
-        </div>
+        </section>
 
-        <div class="quiz-question">
-            <h3>2. Comment le triangle de Sierpinski est-il construit récursivement ?</h3>
-            <label><input type="radio" name="q2" value="a"> En ajoutant des triangles au centre</label><br>
-            <label><input type="radio" name="q2" value="b"> En divisant en 4 triangles et en supprimant le centre</label><br>
-            <label><input type="radio" name="q2" value="c"> En dessinant des cercles à l'intérieur</label><br>
-            <label><input type="radio" name="q2" value="d"> En reliant les sommets avec des courbes</label><br>
-            <button onclick="checkAnswer('q2', 'b')">Vérifier la Réponse</button>
-            <div id="result-q2" class="quiz-result"></div>
-            <details id="correction-q2" style="display: none;">
-                <summary>Correction</summary>
-                <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>En divisant en 4 triangles et en supprimant le centre</strong>. La construction récursive du triangle de Sierpinski commence par un triangle équilatéral, divisé en 4 triangles plus petits en reliant les milieux des côtés, puis le triangle central est supprimé. Ce processus est répété à l'infini. Regardez la vidéo "Méthodes de Construction" pour une démonstration visuelle !</p>
+        <!-- Interactive Animation -->
+        <section id="interactive" class="mb-8">
+            <h2 class="text-3xl font-semibold section-title mb-4">Animation Interactive 3D</h2>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <label for="fractalType" class="text-lg">Type de fractale :</label>
+                <select id="fractalType" class="bg-gray-100 text-gray-800 p-2 rounded">
+                    <option value="triangle">Triangle de Sierpinski (2D)</option>
+                    <option value="carpet">Tapis de Sierpinski (2D)</option>
+                    <option value="tetrahedron">Tétraèdre de Sierpinski (3D Interactive)</option>
+                </select>
+                
+                <label for="speed" class="text-lg ml-4">Vitesse (points par frame) :</label>
+                <input type="range" id="speed" min="1" max="50" value="1" class="ml-2">
+                <span id="speedValue" class="ml-2">1</span>
+                
+                <div class="mt-4 flex space-x-4">
+                    <button id="startBtn" class="btn-primary text-white px-4 py-2 rounded">Démarrer l'Animation</button>
+                    <button id="pauseBtn" class="btn-primary text-white px-4 py-2 rounded">Démarrer</button>
+                    <button id="stepBtn" class="btn-primary text-white px-4 py-2 rounded">Étape Suivante</button>
+                    <button id="resetBtn" class="btn-primary text-white px-4 py-2 rounded">Réinitialiser</button>
+                </div>
+                
+                <p class="mt-4">Itérations : <span id="iterationCount" class="font-bold text-blue-900">0</span></p>
+                
+                <canvas id="canvas" width="800" height="600" class="hidden border rounded-lg shadow"></canvas>
+                <div id="threeContainer" class="hidden w-[800px] h-[600px]"></div>
+            </div>
+        </section>
+
+        <!-- Videos -->
+        <section id="videos" class="mb-8">
+            <h2 class="text-3xl font-semibold section-title mb-4">Vidéos Éducatives sur les Fractales de Sierpinski</h2>
+            <p class="text-lg mb-4">Pour enrichir votre expérience, voici une sélection organisée de vidéos YouTube couvrant l'histoire, les méthodes de construction, le jeu du chaos, la dimension fractale et des propriétés étranges. Chaque section est dédiée à un aspect spécifique pour un apprentissage progressif et plaisant. Chaque vidéo est suivie d'un récapitulatif détaillé basé sur son contenu, pour vous permettre de saisir les idées principales sans obligatoirement la visionner en entier.</p>
+
+            <h3 class="text-2xl font-semibold border-b-2 border-blue-900 pb-2 mb-4">1. Histoire et Découverte du Triangle de Sierpinski</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/-Bz2onW2YHQ" title="Histoire du Triangle de Sierpinski" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="mx-auto rounded-lg shadow"></iframe>
+            <details class="mt-4 bg-white rounded-lg shadow p-4">
+                <summary class="font-bold text-blue-900 cursor-pointer">Récapitulatif Détaillé</summary>
+                <p>Le vidéo, intitulé "The Sierpinski Triangle," est le premier épisode de Math Proof Monday par The Newton Frontier. Il se concentre sur le triangle de Sierpinski, un fractal nommé d'après le mathématicien polonais Waclaw Sierpinski, et fournit des preuves pour son aire et son périmètre.</p>
+                <h4 class="text-xl font-semibold mt-4">Histoire et Explication du Triangle de Sierpinski :</h4>
+                <ul class="list-disc pl-6">
+                    <li>Le triangle de Sierpinski est décrit comme un fractal, une figure géométrique où des motifs similaires se répètent à des échelles de plus en plus petites.</li>
+                    <li>Il est construit à partir d'un triangle équilatéral en le subdivisant de manière répétée en quatre triangles équilatéraux congruents plus petits et en supprimant le triangle central, ce processus étant répété un nombre infini de fois.</li>
+                </ul>
+                <h4 class="text-xl font-semibold mt-4">Preuves et Analyse Mathématique :</h4>
+                <ul class="list-disc pl-6">
+                    <li><strong>Preuve de l'Aire :</strong></li>
+                    <ul class="list-disc pl-6">
+                        <li>L'aire d'un triangle équilatéral est donnée par la formule (racine carrée de 3)/4 fois la longueur du côté au carré.</li>
+                        <li>Pour le triangle de Sierpinski, l'aire à chaque étape (n) est calculée, commençant par n=0 (triangle original) et progressant vers des étapes supérieures.</li>
+                        <li>Exemples : à n=0, aire = (racine carrée de 3)/4 ; à n=1, aire = (racine carrée de 3)/4 fois 3/4 ; à n=2, aire = (racine carrée de 3)/4 fois 9/16 ; à n=3, aire = (racine carrée de 3)/4 fois 27/64.</li>
+                        <li>Un motif est identifié où l'aire à l'étape n égale (racine carrée de 3)/4 fois (3/4)^n.</li>
+                        <li>En prenant la limite lorsque n approche l'infini, l'aire de la région non ombrée approche 0, car (3/4)^infini (où 3/4 < 1) résulte en 0.</li>
+                    </ul>
+                    <li><strong>Preuve du Périmètre :</strong></li>
+                    <ul class="list-disc pl-6">
+                        <li>Le périmètre à n=0 est 3 (pour un triangle de longueur de côté 1).</li>
+                        <li>À chaque étape subséquente, la longueur du côté est divisée par deux, et le nombre de côtés augmente.</li>
+                        <li>Pour n=1, chaque petit triangle a des côtés de longueur 1/2, et avec trois triangles, le périmètre est 9/2.</li>
+                        <li>Le périmètre suit un motif où à l'étape n, il égale 3 fois (3/2)^n.</li>
+                        <li>En prenant la limite lorsque n approche l'infini, le périmètre approche l'infini, car (3/2)^infini (où 3/2 > 1) croît sans borne.</li>
+                        <li>Cela résulte en une figure géométriquement intéressante avec une aire nulle mais un périmètre infini.</li>
+                    </ul>
+                </ul>
+                <p>Le vidéo se termine par un appel à aimer et s'abonner à la chaîne pour le soutien.</p>
             </details>
-        </div>
 
-        <div class="quiz-question">
-            <h3>3. Quelle est la règle principale du jeu du chaos pour générer le triangle de Sierpinski ?</h3>
-            <label><input type="radio" name="q3" value="a"> Placer un point au centre du triangle</label><br>
-            <label><input type="radio" name="q3" value="b"> Déplacer un point à mi-chemin vers un sommet choisi aléatoirement</label><br>
-            <label><input type="radio" name="q3" value="c"> Relier les sommets avec des lignes droites</label><br>
-            <label><input type="radio" name="q3" value="d"> Diviser le triangle en carrés</label><br>
-            <button onclick="checkAnswer('q3', 'b')">Vérifier la Réponse</button>
-            <div id="result-q3" class="quiz-result"></div>
-            <details id="correction-q3" style="display: none;">
-                <summary>Correction</summary>
-                <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Déplacer un point à mi-chemin vers un sommet choisi aléatoirement</strong>. Dans le jeu du chaos, on choisit un point initial, puis on sélectionne aléatoirement un sommet du triangle et on place un nouveau point à mi-chemin entre le point actuel et ce sommet. Ce processus répété génère le triangle de Sierpinski. Consultez la vidéo "Jeu du Chaos" pour voir une simulation !</p>
+            <h3 class="text-2xl font-semibold border-b-2 border-blue-900 pb-2 mb-4">2. Méthodes de Construction du Triangle de Sierpinski</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/IZHiBJGcrqI" title="Méthodes de Construction" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="mx-auto rounded-lg shadow"></iframe>
+            <details class="mt-4 bg-white rounded-lg shadow p-4">
+                <summary class="font-bold text-blue-900 cursor-pointer">Récapitulatif Détaillé</summary>
+                <p>Le vidéo présente six constructions mathématiques pour créer le triangle de Sierpiński, un fractal célèbre, avec des explications détaillées basées sur la description et les extraits de transcription. Les idées principales pour chaque construction sont les suivantes :</p>
+                <ol class="list-decimal pl-6">
+                    <li><strong>Suppression de Triangles :</strong> Commencez avec un triangle équilatéral, divisez-le en quatre triangles équilatéraux congruents, supprimez le milieu, et répétez le processus sur les triangles restants. Ce processus itératif continue indéfiniment, créant une figure auto-similaire où zoomer en révèle la même forme, approximant le triangle de Sierpiński.</li>
+                    <li><strong>Le Jeu du Chaos :</strong> Commencez avec un triangle équilatéral et un point au milieu. Sélectionnez aléatoirement l'un des trois sommets, tracez une ligne vers lui, et tracez le point milieu. Répétez ce processus, en partant du nouveau point à chaque fois, et après de nombreuses itérations (par exemple, 30 000 fois), le tracé résultant forme le triangle de Sierpiński, démontrant l'ordre à partir d'actions apparemment aléatoires.</li>
+                    <li><strong>Triangle de Pascal Modulo 2 (Halayudha) :</strong> Construisez le triangle de Pascal en commençant par un "1" au sommet, et chaque entrée est la somme des deux entrées au-dessus, avec les rangées commençant et se terminant par "1". Ombrez les cellules si l'entrée est impaire et laissez non ombrées si paire. En étendant cela à la rangée 256 et en ombrant seulement les entrées impaires révèle le triangle de Sierpiński, avec le motif expliqué par le processus.</li>
+                    <li><strong>Arbre Branchant Ternaire :</strong> Commencez avec une ligne de longueur unitaire et appliquez trois transformations, chacune mettant à l'échelle par 0.5 et tournant par un multiple de 2π/3. Répétez ces transformations sur les branches itérativement, et après avoir supprimé les branches, l'ensemble résultant des feuilles forme le triangle de Sierpiński.</li>
+                    <li><strong>Ordre de Dominance Bitwise :</strong> Introduisez un ordre partiel où un nombre est inférieur ou égal à un autre si chaque bit de 1 dans le premier est également 1 dans le second. En arrangeant les nombres de 0 à 2^n - 1 dans un triangle et en ombrant les cellules où un nombre domine un autre révèle le triangle de Sierpiński. Cela relie les représentations binaires et les fractales.</li>
+                    <li><strong>Construction de la Flèche :</strong> Commencez avec un triangle pointant vers le bas, remplacez chaque côté par une flèche (deux segments formant un V), et répétez. Après plusieurs itérations, la courbe résultante, lorsqu'ombrée, forme le triangle de Sierpiński. Cela démontre une autre méthode itérative pour générer le fractal.</li>
+                </ol>
+                <p>Le vidéo met l'accent sur la polyvalence du triangle de Sierpiński, apparaissant dans divers contextes mathématiques, et encourage l'exploration supplémentaire via des ressources liées.</p>
             </details>
-        </div>
 
-        <div class="quiz-question">
-            <h3>4. Quelle est la dimension fractale approximative du triangle de Sierpinski ?</h3>
-            <label><input type="radio" name="q4" value="a"> 1</label><br>
-            <label><input type="radio" name="q4" value="b"> 1.585</label><br>
-            <label><input type="radio" name="q4" value="c"> 2</label><br>
-            <label><input type="radio" name="q4" value="d"> 3</label><br>
-            <button onclick="checkAnswer('q4', 'b')">Vérifier la Réponse</button>
-            <div id="result-q4" class="quiz-result"></div>
-            <details id="correction-q4" style="display: none;">
-                <summary>Correction</summary>
-                <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>1.585</strong>. La dimension fractale du triangle de Sierpinski est calculée avec l'équation 2^D = 3, où D est la dimension, soit D = log(3)/log(2) ≈ 1.585. Cela reflète sa nature entre une ligne (dimension 1) et une surface (dimension 2). Regardez la vidéo "Dimension Fractale" pour la derivation !</p>
+            <h3 class="text-2xl font-semibold border-b-2 border-blue-900 pb-2 mb-4">3. Le Jeu du Chaos et la Génération du Triangle</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/DM5uaMlHpQw" title="Jeu du Chaos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="mx-auto rounded-lg shadow"></iframe>
+            <details class="mt-4 bg-white rounded-lg shadow p-4">
+                <summary class="font-bold text-blue-900 cursor-pointer">Récapitulatif Détaillé</summary>
+                <p>Le vidéo se concentre sur la simulation du jeu du chaos pour générer le triangle de Sierpinski, un fractal avec une forme triangulaire contenant des triangles inversés plus petits répétés infiniment. Le processus commence par expliquer le triangle de Sierpinski et sa connexion au triangle de Pascal, où marquer les nombres pairs révèle un motif ressemblant à l'étoile de Sierpinski.</p>
+                <p>Le jeu du chaos est introduit comme une méthode pour créer le triangle de Sierpinski : commencez avec trois points aux sommets d'un triangle (ABC), choisissez un point aléatoire à l'intérieur, et dessinez de manière répétée un nouveau point à mi-chemin entre le point actuel et un sommet choisi aléatoirement. Ce processus, techniquement appelé "attracteur," résulte en des points formant le triangle de Sierpinski, connu comme un "attracteur étrange."</p>
+                <p>Le vidéo fournit une intuition pour le jeu du chaos : si un point commence sur le triangle de Sierpinski, le point suivant reste sur lui, situé sur un triangle similaire plus petit près d'un coin. Si commençant à l'intérieur de l'espace blanc (les lacunes dans le triangle), le nouveau point se rapproche du triangle de Sierpinski, et le processus continue à remplir le motif fractal. Commencer en dehors du triangle suit un principe similaire, convergeant éventuellement vers le triangle de Sierpinski.</p>
+                <p>Une simulation interactive est disponible à https://nishkaarora.github.io/sierpinski/, permettant aux utilisateurs de choisir les coordonnées du triangle et la position de départ pour le jeu du chaos. Le vidéo encourage les spectateurs à essayer de coder la simulation eux-mêmes et conclut en soulignant la fascination des mathématiques.</p>
             </details>
-        </div>
 
-        <div class="quiz-question">
-            <h3>5. Quelle propriété étrange est associée au triangle de Sierpinski ?</h3>
-            <label><input type="radio" name="q5" value="a"> Il a une aire infinie</label><br>
-            <label><input type="radio" name="q5" value="b"> Il a une aire nulle et un périmètre infini</label><br>
-            <label><input type="radio" name="q5" value="c"> Il est entièrement rempli de points</label><br>
-            <label><input type="radio" name="q5" value="d"> Il a une dimension entière</label><br>
-            <button onclick="checkAnswer('q5', 'b')">Vérifier la Réponse</button>
-            <div id="result-q5" class="quiz-result"></div>
-            <details id="correction-q5" style="display: none;">
-                <summary>Correction</summary>
-                <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Il a une aire nulle et un périmètre infini</strong>. Le triangle de Sierpinski a une aire qui tend vers zéro à cause des suppressions répétées de triangles, mais son périmètre croît à l'infini car les côtés deviennent de plus en plus nombreux. Consultez la vidéo "Histoire et Découverte" pour les preuves mathématiques !</p>
+            <h3 class="text-2xl font-semibold border-b-2 border-blue-900 pb-2 mb-4">4. Dimension Fractale et Applications</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/aCxnVrHS7dc" title="Dimension Fractale" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="mx-auto rounded-lg shadow"></iframe>
+            <details class="mt-4 bg-white rounded-lg shadow p-4">
+                <summary class="font-bold text-blue-900 cursor-pointer">Récapitulatif Détaillé</summary>
+                <p>Le vidéo se concentre sur le triangle de Sierpinski, un fractal avec une aire égale à zéro et une dimension fractionnaire approximativement 1.585, qui se situe entre les dimensions d'une ligne (1) et d'un carré (2). Le processus de formation commence avec un triangle équilatéral, où les points médians de chaque côté sont trouvés et connectés pour former quatre triangles équilatéraux plus petits congruents. Le triangle du milieu est supprimé, laissant trois triangles identiques plus petits. Ce processus est répété infiniment, avec chaque étape impliquant de trouver les points médians, de les connecter, et de supprimer le triangle du milieu.</p>
+                <p>La dimension fractale est calculée en utilisant une équation dérivée d'une vidéo précédente (https://www.youtube.com/watch?v=wgZYKFKZSeU), reliant le facteur d'échelle et le nombre de pièces. Pour le triangle de Sierpinski, chaque étape met à l'échelle les longueurs des côtés par 1/2, et trois nouveaux triangles sont formés, menant à l'équation 2^D = 3, où D est la dimension. Cela est résolu en la réécrivant comme un logarithme, log base 2 de 3, qui est évalué en utilisant la règle de changement de base (log 3 / log 2 ou ln 3 / ln 2), résultant en un nombre irrationnel approximativement 1.5849.</p>
+                <h4 class="text-xl font-semibold mt-4">Récapitulatif des Idées Principales :</h4>
+                <ul class="list-disc pl-6">
+                    <li><strong>Formation du Triangle de Sierpinski :</strong> Le processus commence avec un triangle équilatéral. Les points médians de chaque côté sont connectés pour former quatre triangles équilatéraux plus petits, et le milieu est supprimé, laissant trois triangles identiques. Cela est répété infiniment, créant un motif auto-similaire.</li>
+                    <li><strong>Dimension Fractale :</strong> La dimension est fractionnaire, approximativement 1.585, et est calculée en utilisant l'équation 2^D = 3, dérivée du facteur d'échelle (1/2) et du nombre de pièces (3) après chaque itération. Cette équation est résolu en prenant le logarithme base 2 de 3, évalué comme log 3 / log 2 ou ln 3 / ln 2, produisant un nombre irrationnel.</li>
+                    <li><strong>Applications et Contexte :</strong> Le vidéo mentionne les propriétés du triangle de Sierpinski, telles que l'aire zéro et la dimension fractionnaire, mais les applications spécifiques ne sont pas détaillées dans le contenu fourni. L'accent est mis sur le processus mathématique de formation et de calcul de dimension.</li>
+                </ul>
             </details>
-        </div>
 
-        <button onclick="resetQuiz()">Réinitialiser le Quiz</button>
-    </div>
-    
-    <footer>Créé avec passion pour explorer les merveilles des fractales – 2025</footer>
-    
+            <h3 class="text-2xl font-semibold border-b-2 border-blue-900 pb-2 mb-4">5. Propriétés Étranges et Connexions Mathématiques</h3>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Cboz9IFvuJQ" title="Propriétés Étranges" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="mx-auto rounded-lg shadow"></iframe>
+            <details class="mt-4 bg-white rounded-lg shadow p-4">
+                <summary class="font-bold text-blue-900 cursor-pointer">Récapitulatif Détaillé</summary>
+                <p>Le vidéo discute du triangle de Sierpiński, en se concentrant sur sa nature fractale et une propriété étrange liée aux nombres premiers de Fermat et aux polygones constructibles. Les points clés incluent :</p>
+                <ul class="list-disc pl-6">
+                    <li>Le triangle de Sierpiński est un fractal qui peut être dessiné en commençant par un triangle équilatéral et en trouvant de manière répétée les points médians des bords pour former des triangles plus petits, créant un motif auto-similaire. Alternativement, il peut être construit en commençant par un petit triangle et en le copiant dans des positions spécifiques, en travaillant vers l'extérieur.</li>
+                    <li>Le triangle apparaît dans divers contextes mathématiques, tels que la théorie du chaos (référencé dans la vidéo de Ben Sparks, https://youtu.be/kbKtFN71Lfs) et la Tour de Hanoï (référencé dans la vidéo d'Ayliean, https://youtu.be/PGuRmqpr6Oo).</li>
+                    <li>Le vidéo explore les polygones constructibles, qui sont créés en utilisant seulement une boussole et une règle droite (sans marques). Les triangles équilatéraux (3 côtés) et les polygones réguliers avec des côtés qui sont des puissances de deux (par exemple, 4, 8, 16) sont facilement constructibles. Les polygones à côtés impairs constructibles incluent 3, 5, 15, 17, 51, 85, et d'autres, suivant des règles spécifiques.</li>
+                    <li>Une condition pour qu'un polygone à côtés impairs soit constructible est que le nombre de côtés \(n\) doit être un produit d'une puissance de deux et de n'importe quel nombre de nombres premiers de Fermat distincts. Les nombres premiers de Fermat sont des nombres de la forme \(2^{2^n} + 1\), et seulement cinq sont connus : 3, 5, 17, 257, et 65537. Cela limite le nombre de polygones constructibles impairs à 31, car les combinaisons sont contraintes par l'ensemble fini des nombres premiers de Fermat.</li>
+                    <li>La propriété étrange mise en évidence est que convertir les nombres de polygones constructibles impairs en binaire et les arranger dans un motif triangulaire révèle le triangle de Sierpiński. Ce motif tient jusqu'à la rangée 32, mais se décompose après la rangée 33 en raison du prochain nombre de Fermat (non premier, par exemple, 641 × 6700417), car il n'y a peut-être plus de nombres premiers de Fermat au-delà des cinq connus.</li>
+                </ul>
+                <h4 class="text-xl font-semibold mt-4">Récapitulatif des Idées Principales :</h4>
+                <p>Le vidéo commence par introduire le triangle de Sierpiński et explore une connexion inattendue entre les nombres de côtés des polygones constructibles impairs et le motif du triangle de Sierpiński en binaire. Il discute des limitations imposées par les nombres premiers de Fermat et comment cela mène à une apparition finie du motif fractal dans ce contexte.</p>
+            </details>
+        </section>
+
+        <!-- Quiz -->
+        <section id="quiz" class="mb-8">
+            <h2 class="text-3xl font-semibold section-title mb-4">Quiz sur les Fractales de Sierpinski</h2>
+            <p class="text-lg mb-4">Testez vos connaissances sur les fractales de Sierpinski avec ce quiz interactif ! Répondez aux questions ci-dessous, et si vous vous trompez, une explication détaillée vous aidera à comprendre. Amusez-vous et apprenez en même temps !</p>
+            
+            <div class="quiz-question bg-white p-6 rounded-lg shadow mb-4">
+                <h3 class="text-xl font-semibold mb-2">1. Qui a inventé le triangle de Sierpinski ?</h3>
+                <label class="block"><input type="radio" name="q1" value="a" class="mr-2"> Benoit Mandelbrot</label>
+                <label class="block"><input type="radio" name="q1" value="b" class="mr-2"> Wacław Sierpiński</label>
+                <label class="block"><input type="radio" name="q1" value="c" class="mr-2"> John Conway</label>
+                <label class="block"><input type="radio" name="q1" value="d" class="mr-2"> Michael Barnsley</label>
+                <button onclick="checkAnswer('q1', 'b')" class="btn-primary text-white px-4 py-2 rounded mt-4">Vérifier la Réponse</button>
+                <div id="result-q1" class="quiz-result mt-4 p-4 rounded"></div>
+                <details id="correction-q1" class="mt-2 hidden">
+                    <summary class="font-bold text-blue-900 cursor-pointer">Correction</summary>
+                    <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Wacław Sierpiński</strong>. Le triangle de Sierpinski a été inventé par le mathématicien polonais Wacław Sierpiński en 1915. Benoit Mandelbrot est connu pour l'ensemble de Mandelbrot, John Conway pour le Jeu de la Vie, et Michael Barnsley pour ses travaux sur les fractales et le jeu du chaos. Consultez la vidéo "Histoire et Découverte" pour plus de détails !</p>
+                </details>
+            </div>
+
+            <div class="quiz-question bg-white p-6 rounded-lg shadow mb-4">
+                <h3 class="text-xl font-semibold mb-2">2. Comment le triangle de Sierpinski est-il construit récursivement ?</h3>
+                <label class="block"><input type="radio" name="q2" value="a" class="mr-2"> En ajoutant des triangles au centre</label>
+                <label class="block"><input type="radio" name="q2" value="b" class="mr-2"> En divisant en 4 triangles et en supprimant le centre</label>
+                <label class="block"><input type="radio" name="q2" value="c" class="mr-2"> En dessinant des cercles à l'intérieur</label>
+                <label class="block"><input type="radio" name="q2" value="d" class="mr-2"> En reliant les sommets avec des courbes</label>
+                <button onclick="checkAnswer('q2', 'b')" class="btn-primary text-white px-4 py-2 rounded mt-4">Vérifier la Réponse</button>
+                <div id="result-q2" class="quiz-result mt-4 p-4 rounded"></div>
+                <details id="correction-q2" class="mt-2 hidden">
+                    <summary class="font-bold text-blue-900 cursor-pointer">Correction</summary>
+                    <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>En divisant en 4 triangles et en supprimant le centre</strong>. La construction récursive du triangle de Sierpinski commence par un triangle équilatéral, divisé en 4 triangles plus petits en reliant les milieux des côtés, puis le triangle central est supprimé. Ce processus est répété à l'infini. Regardez la vidéo "Méthodes de Construction" pour une démonstration visuelle !</p>
+                </details>
+            </div>
+
+            <div class="quiz-question bg-white p-6 rounded-lg shadow mb-4">
+                <h3 class="text-xl font-semibold mb-2">3. Quelle est la règle principale du jeu du chaos pour générer le triangle de Sierpinski ?</h3>
+                <label class="block"><input type="radio" name="q3" value="a" class="mr-2"> Placer un point au centre du triangle</label>
+                <label class="block"><input type="radio" name="q3" value="b" class="mr-2"> Déplacer un point à mi-chemin vers un sommet choisi aléatoirement</label>
+                <label class="block"><input type="radio" name="q3" value="c" class="mr-2"> Relier les sommets avec des lignes droites</label>
+                <label class="block"><input type="radio" name="q3" value="d" class="mr-2"> Diviser le triangle en carrés</label>
+                <button onclick="checkAnswer('q3', 'b')" class="btn-primary text-white px-4 py-2 rounded mt-4">Vérifier la Réponse</button>
+                <div id="result-q3" class="quiz-result mt-4 p-4 rounded"></div>
+                <details id="correction-q3" class="mt-2 hidden">
+                    <summary class="font-bold text-blue-900 cursor-pointer">Correction</summary>
+                    <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Déplacer un point à mi-chemin vers un sommet choisi aléatoirement</strong>. Dans le jeu du chaos, on choisit un point initial, puis on sélectionne aléatoirement un sommet du triangle et on place un nouveau point à mi-chemin entre le point actuel et ce sommet. Ce processus répété génère le triangle de Sierpinski. Consultez la vidéo "Jeu du Chaos" pour voir une simulation !</p>
+                </details>
+            </div>
+
+            <div class="quiz-question bg-white p-6 rounded-lg shadow mb-4">
+                <h3 class="text-xl font-semibold mb-2">4. Quelle est la dimension fractale approximative du triangle de Sierpinski ?</h3>
+                <label class="block"><input type="radio" name="q4" value="a" class="mr-2"> 1</label>
+                <label class="block"><input type="radio" name="q4" value="b" class="mr-2"> 1.585</label>
+                <label class="block"><input type="radio" name="q4" value="c" class="mr-2"> 2</label>
+                <label class="block"><input type="radio" name="q4" value="d" class="mr-2"> 3</label>
+                <button onclick="checkAnswer('q4', 'b')" class="btn-primary text-white px-4 py-2 rounded mt-4">Vérifier la Réponse</button>
+                <div id="result-q4" class="quiz-result mt-4 p-4 rounded"></div>
+                <details id="correction-q4" class="mt-2 hidden">
+                    <summary class="font-bold text-blue-900 cursor-pointer">Correction</summary>
+                    <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>1.585</strong>. La dimension fractale du triangle de Sierpinski est calculée avec l'équation 2^D = 3, où D est la dimension, soit D = log(3)/log(2) ≈ 1.585. Cela reflète sa nature entre une ligne (dimension 1) et une surface (dimension 2). Regardez la vidéo "Dimension Fractale" pour la derivation !</p>
+                </details>
+            </div>
+
+            <div class="quiz-question bg-white p-6 rounded-lg shadow mb-4">
+                <h3 class="text-xl font-semibold mb-2">5. Quelle propriété étrange est associée au triangle de Sierpinski ?</h3>
+                <label class="block"><input type="radio" name="q5" value="a" class="mr-2"> Il a une aire infinie</label>
+                <label class="block"><input type="radio" name="q5" value="b" class="mr-2"> Il a une aire nulle et un périmètre infini</label>
+                <label class="block"><input type="radio" name="q5" value="c" class="mr-2"> Il est entièrement rempli de points</label>
+                <label class="block"><input type="radio" name="q5" value="d" class="mr-2"> Il a une dimension entière</label>
+                <button onclick="checkAnswer('q5', 'b')" class="btn-primary text-white px-4 py-2 rounded mt-4">Vérifier la Réponse</button>
+                <div id="result-q5" class="quiz-result mt-4 p-4 rounded"></div>
+                <details id="correction-q5" class="mt-2 hidden">
+                    <summary class="font-bold text-blue-900 cursor-pointer">Correction</summary>
+                    <p><strong>Réponse incorrecte !</strong> La bonne réponse est <strong>Il a une aire nulle et un périmètre infini</strong>. Le triangle de Sierpinski a une aire qui tend vers zéro à cause des suppressions répétées de triangles, mais son périmètre croît à l'infini car les côtés deviennent de plus en plus nombreux. Consultez la vidéo "Histoire et Découverte" pour les preuves mathématiques !</p>
+                </details>
+            </div>
+
+            <button onclick="resetQuiz()" class="btn-primary text-white px-4 py-2 rounded">Réinitialiser le Quiz</button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-4">
+        <div class="container mx-auto px-4 text-center">
+            <p>Créé avec passion pour explorer les merveilles des fractales – 2025</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactive Animation -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
     <script>
@@ -756,5 +685,4 @@
         }
     </script>
 </body>
-
 </html>
